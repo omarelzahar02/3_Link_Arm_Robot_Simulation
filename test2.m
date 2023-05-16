@@ -5,16 +5,6 @@ axis([-1*(Max+1) (Max+1) -1*(Max+1) (Max+1)])
 grid on
 hold on
 
-%{
-x1 = linspace(0,Max,600);
-y1 = linspace(0,Max,600);
-x2 = linspace(0,Max,600);
-y2 = linspace(0,Max,600);
-x3 = linspace(0,Max,600);
-y3 = linspace(0,Max,600);
-x4 = linspace(0,Max,600);
-y4 = linspace(0,Max,600);
-%}
     for i = 1:abs((maxTh1-minTh1))*10
        x1(i) = l1*cosd(i*0.1+minTh1) + l2*cosd(i*0.1+minTh1+minTh2);
        y1(i) = l1*sind(i*0.1+minTh1) + l2*sind(i*0.1+minTh1+minTh2);
