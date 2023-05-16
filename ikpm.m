@@ -1,24 +1,67 @@
-function [Theta1, Theta2, Theta3] = ikpm(X, Y, phi, L1, L2, L3)
-% X, Y are the position coordinates of the end effector
-% phi is the orientation angle of the end effector
-% L1, L2, L3 are link lengths
-% Theta1, Theta2, Theta3 are the joint angles in radians
-
-% Calculate the position of joint 3
-x3 = X - L3*cos(phi);
-y3 = Y - L3*sin(phi);
-
-% Calculate the angle of joint 1
-Theta1 = atan2(y3, x3) - acos((x3^2 + y3^2 + L1^2 - L2^2) / (2*L1*sqrt(x3^2 + y3^2)));
-
-% Calculate the position of joint 2
-x2 = x3 + L2*cos(Theta1 + acos((x3^2 + y3^2 + L1^2 - L2^2) / (2*L1*sqrt(x3^2 + y3^2))));
-y2 = y3 + L2*sin(Theta1 + acos((x3^2 + y3^2 + L1^2 - L2^2) / (2*L1*sqrt(x3^2 + y3^2))));
-
-% Calculate the angle of joint 2
-Theta2 = acos((x2^2 + y2^2 - L1^2 - L2^2) / (2*L1*L2));
-
-% Calculate the angle of joint 3
-Theta3 = phi - Theta1 - Theta2;
-
+function [can, Th1,Th2,Th3,Th11,Th22,Th33] = ikpm(X, Y, Phi, l1, l2, l3,Th1min, Th1max, Th2min, Th2max,Th3min, Th3max)
+Th1=0;Th2=0;Th3=0;Th11=0;Th22=0;Th33=0;
+firstSol = false; %to check if the first solution is valid 
+secondSol = false; %to check if the second solution is valid
+twoSol = false; %is true if both solutions are valid
+can = true; %to check if a valid solution within range exists
+Xbar=X-l3*cosd(Phi);
+Ybar=Y-l3*sind(Phi);
+c2=(Xbar^2+Ybar^2-l1^2-l2^2)/(2*l1*l2);
+if c2 > 1 || c2 < -1
+    can=false;
+    return;
+end
+Th2=acos(c2)*(180/pi);
+if Th2>=Th2min && Th2<=Th2max
+    firstSol=true;
+end
+Th22=-1*Th2;
+if Th22>=Th2min && Th22<=Th2max
+    secondSol=true;
+end
+if firstSol
+    c1=(l1*Xbar+l2*Ybar*sind(Th2)+l2*Xbar*cosd(Th2))/(Xbar^2+Ybar^2);
+    s1=(l1*Ybar+l2*Ybar*cosd(Th2)-l2*Xbar*sind(Th2))/(Xbar^2+Ybar^2);
+    if c1<-1 ||c1>1 || s1<-1 || s1>1
+        firstSol=false;
+    else
+        Th1=atan(s1/c1)*(180/pi);
+        if Th1<Th1min||Th1>Th1max
+            firstSol=false;
+        end
+    end
+end
+if secondSol
+    c1=(l1*Xbar+l2*Ybar*sind(Th2)+l2*Xbar*cosd(Th2))/(Xbar^2+Ybar^2);
+    s1=(l1*Ybar+l2*Ybar*cosd(Th2)-l2*Xbar*sind(Th2))/(Xbar^2+Ybar^2);
+    if c1<-1 ||c1>1 || s1<-1 || s1>1
+        secondSol=false;
+    else
+        Th11=atan(s1/c1)*(180/pi);
+        if Th11<Th1min||Th11>Th1max
+            secondSol=false;
+        end
+    end
+end
+if firstSol
+   Th3=Phi-Th1-Th2;
+   if Th3<Th3min||Th3>Th3max
+       firstSol=false;
+   end
+end
+if secondSol
+   Th33=Phi-Th1-Th2;
+   if Th33<Th3min||Th33>Th3max
+       secondSol=false;
+   end
+end
+twoSol=firstSol&&secondSol;
+can=firstSol||secondSol;
+if ~twoSol && can
+    if secondSol
+        Th1=Th11;
+        Th2=Th22;
+        Th3=Th33;
+    end
+end
 end

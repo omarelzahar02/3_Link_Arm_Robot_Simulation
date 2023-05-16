@@ -8,7 +8,7 @@ function []=RobotAnimation(L1, L2, L3, minTh1, maxTh1, minTh2, maxTh2, minTh3, m
     % Calculate the (x,y) coordinates of the end effector for each joint angle
     [x, y, phi] = dkpm(L1, L2, L3, Theta1, Theta2, Theta3);
 
-
+    figure;
     for i = 1:length(Theta1)
         % Plot the robot arm at the current joint angles
         plot([0, L1*cosd(Theta1(i)), L1*cosd(Theta1(i)) + L2*cosd(Theta1(i) + Theta2(i)), x(i)], [0, L1*sind(Theta1(i)), L1*sind(Theta1(i)) + L2*sind(Theta1(i) + Theta2(i)), y(i)], '-O');

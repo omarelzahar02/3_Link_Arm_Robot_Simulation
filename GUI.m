@@ -151,7 +151,7 @@ if(l1 <=0 || l2 <= 0 || l3<= 0)
 end
 
 set(handles.text45, 'String', 'valid values');
-[can, twoSol, Th1, Th2, Th3, Th11, Th22, Th33] = IKPM_3link(x ,y ,phi ,l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+[can, Th1, Th2, Th3, Th11, Th22, Th33] = ikpm(x ,y ,phi ,l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
     if (can)
        set(handles.text45, 'String', 'Success');
        set(handles.text42, 'String', Th1);
@@ -226,6 +226,7 @@ if(l1 <=0 || l2 <= 0 || l3<= 0)
     set(handles.text45, 'String', 'Invalid values');
     return;
 end
+
 Robot_Animation(l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
 
 function edit1_Callback(hObject, eventdata, handles)
