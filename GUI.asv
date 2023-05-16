@@ -99,6 +99,14 @@ minTh2 = str2double(get(handles.edit5, 'String'));
 maxTh2 = str2double(get(handles.edit27, 'String'));
 minTh3 = str2double(get(handles.edit6, 'String'));
 maxTh3 = str2double(get(handles.edit28, 'String'));
+%{
+minTh1 = str2num(get(handles.edit4));
+maxTh1 = str2num(get(handles.edit26));
+minTh2 = str2num(get(handles.edit5));
+maxTh2 = str2num(get(handles.edit27));
+minTh3 = str2num(get(handles.edit6));
+maxTh3 = str2num(get(handles.edit28));
+%}
 
 if(l1 <=0 || l2 <= 0 || l3<= 0 || Angle1 < minTh1 || Angle1 > maxTh1 || Angle2 < minTh2 || Angle2 > maxTh2 || minTh2 >= maxTh2 || minTh1 >= maxTh1 ||Angle3 < minTh3 || Angle3 > maxTh3)
     set(handles.text45, 'String', 'Invalid values');
@@ -114,7 +122,21 @@ Max =l1+l2+l3;
 
 set(handles.axes2, 'XLim', [-1*(Max+1),(Max+1)]);
 set(handles.axes2, 'YLim', [-1*(Max+1),(Max+1)]);
-drawing(l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+[x1 y1 x2 y2 x3 y3 x4 y4 x5 y5 x6 y6 x7 y7 x8 y8 x9 y9 x10 y10 x11 y11 x12 y12] = drawing(l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+
+plot(handles.axes2, x1, y1);
+plot(handles.axes2, x2, y2);
+plot(handles.axes2, x3, y3);
+plot(handles.axes2, x4, y4);
+plot(handles.axes2, x5, y5);
+plot(handles.axes2, x6, y6);
+plot(handles.axes2, x7, y7);
+plot(handles.axes2, x8, y8);
+plot(handles.axes2, x9, y9);
+plot(handles.axes2, x10, y10);
+plot(handles.axes2, x11, y11);
+plot(handles.axes2, x12, y12);
+
 
 
 % --- Executes on button press in IKPM_pushbutton2.
@@ -144,22 +166,21 @@ maxTh3 = str2double(get(handles.edit28, 'String'));
 x = str2double(get(handles.edit9, 'String'));
 y = str2double(get(handles.edit14, 'String'));
 
-
+%phi = 260;
 if(l1 <=0 || l2 <= 0 || l3<= 0)
     set(handles.text45, 'String', 'Invalid values');
     return;
 end
-
-set(handles.text45, 'String', 'valid values');
-[can, twoSol, Th1, Th2, Th3, Th11, Th22, Th33] = IKPM_3link(x ,y ,phi ,l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
-    if (can)
-       set(handles.text45, 'String', 'Success');
-       set(handles.text42, 'String', Th1);
-       set(handles.text43, 'String', Th2);
-       set(handles.text44, 'String', Th3);
-    else
-        set(handles.text45, 'String', 'Out of range');
-    end
+do = Point_Check(x ,y ,phi ,l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+%do = Validate
+%if (do == 1)
+    set(handles.text45, 'String', 'valid values');
+    [valid, twoSol, q1,q2,q3,q1bar,q2bar,q3bar Th1 Th2 Th3] = IKPM_3link(x ,y ,phi ,l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+    set(handles.text42, 'String', Th1);
+    set(handles.text43, 'String', Th2);
+    set(handles.text44, 'String', Th3);
+    
+%end  
        
        
 % --- Executes on button press in drawWA_pushbutton3.
@@ -192,10 +213,22 @@ end
 
 max =l1+l2+l3;
 
-%set(handles.axes2, 'XLim', [-max, max]);
-%set(handles.axes2, 'YLim', [-max, max]);
-WAP(l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
-
+set(handles.axes2, 'XLim', [-max, max]);
+set(handles.axes2, 'YLim', [-max, max]);
+%[X Y] = WAP(l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+for th1 = minTh1:5:maxTh1
+    for th2 = minTh2:5:maxTh2
+        for th3 = minTh3:5:maxTh3
+            if(th1 ~= 0 && th2 ~= 0 && th3 ~= 0)
+               [a, b, phi] = dkpm(l1, l2, l3, th1, th2, th3);
+               plot(handles.axes2, a, b);
+             end    
+                %hold on
+                %drawnow
+         end
+     end
+end
+plot(handles.axes2, X, Y);
 set(handles.text45, 'String', 'Success');
 
 
@@ -204,29 +237,8 @@ function Submit_pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to Submit_pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-cla(handles.axes2);
-set(handles.text17, 'String', '');
-set(handles.text18, 'String', '');
-set(handles.text42, 'String', '');
-set(handles.text43, 'String', '');
-set(handles.text44, 'String', '');
-set(handles.text38, 'String', '');
-l1 = str2double(get(handles.edit1, 'String'));
-l2 = str2double(get(handles.edit2, 'String'));
-l3 = str2double(get(handles.edit3, 'String'));
 
-minTh1 = str2double(get(handles.edit4, 'String'));
-maxTh1 = str2double(get(handles.edit26, 'String'));
-minTh2 = str2double(get(handles.edit5, 'String'));
-maxTh2 = str2double(get(handles.edit27, 'String'));
-minTh3 = str2double(get(handles.edit6, 'String'));
-maxTh3 = str2double(get(handles.edit28, 'String'));
 
-if(l1 <=0 || l2 <= 0 || l3<= 0)
-    set(handles.text45, 'String', 'Invalid values');
-    return;
-end
-Robot_Animation(l1, l2, l3, minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
 
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
