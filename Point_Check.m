@@ -9,7 +9,7 @@ if(check1 > 1 ||check1 < -1|| check2 > 1 ||check2 < -1|| check3 > 1 ||check3 < -
     can = 0;
 else    
 % Calculate the angle of joint 1
-    Theta1 = atan2(y3, x3) - acos((x3^2 + y3^2 + L1^2 - L2^2) / (2*L1*sqrt(x3^2 + y3^2)));
+    Theta1 = (180/pi)*atan2(y3, x3) - acos((x3^2 + y3^2 + L1^2 - L2^2) / (2*L1*sqrt(x3^2 + y3^2)));
 
 % Calculate the position of joint 2
     x2 = x3 + L2*cos(Theta1 + acos((x3^2 + y3^2 + L1^2 - L2^2) / (2*L1*sqrt(x3^2 + y3^2))));
@@ -19,11 +19,20 @@ else
         can = 0;
     else
 % Calculate the angle of joint 2
-        Theta2 = acos((x2^2 + y2^2 - L1^2 - L2^2) / (2*L1*L2));
+        Theta2 = (180/pi)*acos((x2^2 + y2^2 - L1^2 - L2^2) / (2*L1*L2));
 
 % Calculate the angle of joint 3
         Theta3 = phi - Theta1 - Theta2;
-            if(Theta1>Theta1min||Theta1 < Theta1max || Theta2>Theta2min||Theta2 < Theta2max || Theta3>Theta3min||Theta3 < Theta3max )
+        if(Theta3<0)
+            Theta3=Theta3+360;
+        end
+        if(Theta1<0)
+            Theta1=Theta3+360;
+        end
+        if(Theta2<0)
+            Theta2=Theta3+360;
+        end
+            if(Theta1<Theta1min||Theta1 > Theta1max || Theta2<Theta2min||Theta2 >Theta2max || Theta3<Theta3min||Theta3 > Theta3max )
                 can = 0;
             end
     end
