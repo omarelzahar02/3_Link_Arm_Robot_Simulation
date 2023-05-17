@@ -649,7 +649,40 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+cla(handles.axes2);
+set(handles.text17, 'String', '');
+set(handles.text18, 'String', '');
+set(handles.text42, 'String', '');
+set(handles.text43, 'String', '');
+set(handles.text44, 'String', '');
+set(handles.text38, 'String', '');
+l1 = str2double(get(handles.edit1, 'String'));
+l2 = str2double(get(handles.edit2, 'String'));
+l3 = str2double(get(handles.edit3, 'String'));
 
+phi = str2double(get(handles.edit29, 'String'));
+
+minTh1 = str2double(get(handles.edit4, 'String'));
+maxTh1 = str2double(get(handles.edit26, 'String'));
+minTh2 = str2double(get(handles.edit5, 'String'));
+maxTh2 = str2double(get(handles.edit27, 'String'));
+minTh3 = str2double(get(handles.edit6, 'String'));
+maxTh3 = str2double(get(handles.edit28, 'String'));
+
+x1 = str2double(get(handles.edit21, 'String'));
+y1 = str2double(get(handles.edit22, 'String'));
+x2 = str2double(get(handles.edit24, 'String'));
+y2 = str2double(get(handles.edit25, 'String'));
+if(l1 <=0 || l2 <= 0 || l3<= 0)
+    set(handles.text45, 'String', 'Invalid values');
+    return;
+end
+can = Line_Connecting(x1, y1,phi, x2 , y2, phi, l1, l2, l3,minTh1, maxTh1, minTh2, maxTh2, minTh3, maxTh3);
+if (can)
+    set(handles.text45, 'String', 'Success');
+else
+    set(handles.text45, 'String', 'Out of range');
+end
 
 % --- Executes on button press in pushbutton8.
 function pushbutton8_Callback(hObject, eventdata, handles)

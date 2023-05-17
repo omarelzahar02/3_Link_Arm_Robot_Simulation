@@ -13,15 +13,11 @@ if c2 > 1 || c2 < -1
 end
 Th2=acos(c2)*(180/pi);
 if(Th2<0)
-    Th2 = Th2 +360;
-end
+    
 if Th2>=Th2min && Th2<=Th2max
     firstSol=true;
 end
 Th22=-1*Th2;
-if(Th22<0)
-    Th22 = Th22 +360;
-end
 if Th22>=Th2min && Th22<=Th2max
     secondSol=true;
 end

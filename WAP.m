@@ -6,13 +6,12 @@ Max = L1 + L2 + L3;
  grid on
  hold on
 
-    for th1 = minTh1:4:maxTh1
-        for th2 = minTh2:4:maxTh2
+    for th1 = minTh1:5:maxTh1
+        for th2 = minTh2:5:maxTh2
             for th3 = minTh3:5:maxTh3
                 [x, y, phi] = dkpm(L1, L2, L3, th1, th2, th3);
                 plot(x, y, '.');
                 hold on
-                %drawnow
             end
         end
     end
